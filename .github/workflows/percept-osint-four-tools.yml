@@ -1,0 +1,23 @@
+name: Percept OSINT four-tool smoke test
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Sherlock Maigret yt-dlp Whisper
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          python -m pip install --upgrade pip
+          python -m pip install sherlock-project maigret yt-dlp openai-whisper
+      - name: Verify tools
+        run: |
+          sherlock --help >/dev/null
+          maigret --help >/dev/null
+          yt-dlp --version
+          python -c "import whisper; print('Whisper import OK')"
